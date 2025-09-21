@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen>
   final _nameController = TextEditingController();
   final _passportController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  
+
   late AnimationController _logoController;
   late AnimationController _formController;
   late Animation<double> _logoAnimation;
@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen>
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
+
     _formController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -65,7 +65,8 @@ class _LoginScreenState extends State<LoginScreen>
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.5),
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _formController, curve: Curves.easeOutCubic));
+    ).animate(
+        CurvedAnimation(parent: _formController, curve: Curves.easeOutCubic));
 
     _logoController.forward();
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -151,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 40),
-                
+
                 // Logo and Title
                 AnimatedBuilder(
                   animation: _logoAnimation,
@@ -200,7 +201,9 @@ class _LoginScreenState extends State<LoginScreen>
                           Text(
                             'Your Digital Safety Companion',
                             style: theme.textTheme.bodyLarge?.copyWith(
-                              color: isDark ? Colors.white70 : Colors.white.withOpacity(0.9),
+                              color: isDark
+                                  ? Colors.white70
+                                  : Colors.white.withOpacity(0.9),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -209,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen>
                     );
                   },
                 ),
-                
+
                 const SizedBox(height: 50),
 
                 // Login Form
@@ -238,7 +241,8 @@ class _LoginScreenState extends State<LoginScreen>
                                 labelText: 'Full Name / Aadhaar Number',
                                 prefixIcon: const Icon(Icons.person),
                                 filled: true,
-                                fillColor: Colors.grey.shade50,
+                                fillColor:
+                                    const Color.fromARGB(255, 148, 147, 147),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -253,10 +257,12 @@ class _LoginScreenState extends State<LoginScreen>
                             TextFormField(
                               controller: _passportController,
                               decoration: InputDecoration(
-                                labelText: 'Passport Number (Optional for Indians)',
+                                labelText:
+                                    'Passport Number (Optional for Indians)',
                                 prefixIcon: const Icon(Icons.credit_card),
                                 filled: true,
-                                fillColor: Colors.grey.shade50,
+                                fillColor:
+                                    const Color.fromARGB(255, 148, 147, 147),
                               ),
                               validator: (value) {
                                 // Optional validation for passport format
@@ -272,11 +278,14 @@ class _LoginScreenState extends State<LoginScreen>
                                 labelText: l10n.language,
                                 prefixIcon: const Icon(Icons.language),
                                 filled: true,
-                                fillColor: Colors.grey.shade50,
+                                fillColor:
+                                    const Color.fromARGB(255, 148, 147, 147),
                               ),
                               items: const [
-                                DropdownMenuItem(value: 'en', child: Text('🇺🇸 English')),
-                                DropdownMenuItem(value: 'hi', child: Text('🇮🇳 हिन्दी')),
+                                DropdownMenuItem(
+                                    value: 'en', child: Text('🇺🇸 English')),
+                                DropdownMenuItem(
+                                    value: 'hi', child: Text('🇮🇳 हिन्दी')),
                               ],
                               onChanged: (value) {
                                 if (value != null) {
@@ -312,9 +321,11 @@ class _LoginScreenState extends State<LoginScreen>
                                         ),
                                       )
                                     : Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          const Icon(Icons.login, color: Colors.white),
+                                          const Icon(Icons.login,
+                                              color: Colors.white),
                                           const SizedBox(width: 8),
                                           Text(
                                             l10n.login,
