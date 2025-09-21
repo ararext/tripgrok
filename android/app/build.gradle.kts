@@ -13,6 +13,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        // Enable core library desugaring (Kotlin DSL syntax)
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -24,10 +26,13 @@ android {
         applicationId = "com.example.tripgrok"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = maxOf(flutter.minSdkVersion, 21) // Ensure minimum SDK 21 for desugaring
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        
+        // Enable multidex support
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -41,4 +46,12 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // Core library desugaring dependency (Kotlin DSL syntax)
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    
+    // Multidex support (Kotlin DSL syntax)
+    implementation("androidx.multidex:multidex:2.0.1")
 }
