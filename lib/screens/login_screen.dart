@@ -407,7 +407,7 @@ class _LoginScreenState extends State<LoginScreen>
             'Key Features',
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: const Color.fromARGB(255, 122, 10, 197),
             ),
           ),
           const SizedBox(height: 16),
@@ -426,10 +426,12 @@ class _LoginScreenState extends State<LoginScreen>
               return Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
+                  color:
+                      const Color.fromARGB(255, 107, 106, 106).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.2),
+                    color:
+                        const Color.fromARGB(255, 53, 53, 53).withOpacity(0.2),
                   ),
                 ),
                 child: Column(
@@ -437,14 +439,14 @@ class _LoginScreenState extends State<LoginScreen>
                   children: [
                     Icon(
                       feature['icon'] as IconData,
-                      color: Colors.white,
+                      color: const Color.fromARGB(255, 122, 10, 197),
                       size: 32,
                     ),
                     const SizedBox(height: 8),
                     Text(
                       feature['title'] as String,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: Color.fromARGB(255, 155, 56, 248),
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                       ),
@@ -454,7 +456,8 @@ class _LoginScreenState extends State<LoginScreen>
                     Text(
                       feature['description'] as String,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
+                        color: const Color.fromARGB(255, 148, 44, 245)
+                            .withOpacity(0.8),
                         fontSize: 12,
                       ),
                       textAlign: TextAlign.center,
