@@ -1,22 +1,63 @@
+// lib/screens/enhanced_id_screen.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tripgrok/generated/app_localizations.dart';
-import 'package:tripgrok/models/tourist_data.dart';
+import '../generated/app_localizations.dart';
+import '../models/tourist_data.dart';
+import '../core/theme/app_theme.dart';
+import '../widgets/glass_card.dart';
+import 'dart:math' as math;
 
 class IdScreen extends StatefulWidget {
-  const IdScreen({super.key});
+  const IdScreen({Key? key}) : super(key: key);
 
   @override
   State<IdScreen> createState() => _IdScreenState();
 }
 
-class _IdScreenState extends State<IdScreen> {
+class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
   TouristData? _data;
+  bool _isVerified = true;
+  
+  late AnimationController _cardController;
+  late AnimationController _qrController;
+  late Animation<double> _cardAnimation;
+  late Animation<double> _qrAnimation;
+  late Animation<double> _rotationAnimation;
 
   @override
   void initState() {
     super.initState();
     _loadData();
+    _setupAnimations();
+  }
+
+  void _setupAnimations() {
+    _cardController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    
+    _qrController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    _cardAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _cardController, curve: Curves.elasticOut),
+    );
+
+    _qrAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _qrController, curve: Curves.bounceOut),
+    );
+
+    _rotationAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _cardController, curve: Curves.easeInOut),
+    );
+
+    _cardController.forward();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _qrController.forward();
+    });
   }
 
   Future<void> _loadData() async {
@@ -33,31 +74,725 @@ class _IdScreenState extends State<IdScreen> {
     });
   }
 
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
+
+  int _getDaysRemaining() {
+    if (_data == null) return 0;
+    return _data!.expiry.difference(DateTime.now()).inDays;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.digitalId)),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _data == null
-            ? const CircularProgressIndicator()
-            : Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('ID: ${_data!.id}'),
-                      Text('Name: ${_data!.name}'),
-                      Text('Passport: ${_data!.passport}'),
-                      Text('Expiry: ${_data!.expiry.toString()}'),
-                      Text('Emergency Contacts: ${_data!.emergencyContacts.join(', ')}'),
-                    ],
-                  ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: isDark ? null : AppTheme.backgroundGradient,
+          color: isDark ? AppTheme.backgroundDark : null,
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                // Header
+                _buildHeader(l10n, theme),
+                const SizedBox(height: 30),
+
+                // Main ID Card
+                AnimatedBuilder(
+                  animation: _cardAnimation,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _cardAnimation.value,
+                      child: Transform.rotate(
+                        angle: (1 - _rotationAnimation.value) * 0.1,
+                        child: _buildIdCard(l10n, theme, isDark),
+                      ),
+                    );
+                  },
                 ),
-              ),
+                const SizedBox(height: 30),
+
+                // QR Code Section
+                AnimatedBuilder(
+                  animation: _qrAnimation,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _qrAnimation.value,
+                      child: _buildQRSection(l10n, theme),
+                    );
+                  },
+                ),
+                const SizedBox(height: 30),
+
+                // Status Cards
+                _buildStatusCards(l10n, theme),
+                const SizedBox(height: 30),
+
+                // Emergency Contacts
+                _buildEmergencyContacts(l10n, theme),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
+
+  Widget _buildHeader(AppLocalizations l10n, ThemeData theme) {
+    return Row(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.2),
+            shape: BoxShape.circle,
+          ),
+          child: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Text(
+            l10n.digitalId,
+            style: theme.textTheme.headlineMedium?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.2),
+            shape: BoxShape.circle,
+          ),
+          child: IconButton(
+            onPressed: _shareId,
+            icon: const Icon(Icons.share, color: Colors.white),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildIdCard(AppLocalizations l10n, ThemeData theme, bool isDark) {
+    if (_data == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF1A237E),
+                Color(0xFF3F51B5),
+                Color(0xFF5C6BC0),
+              ],
+            ),
+          ),
+          child: Stack(
+            children: [
+              // Background pattern
+              Positioned(
+                right: -50,
+                top: -50,
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.1),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: -30,
+                bottom: -30,
+                child: Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.05),
+                  ),
+                ),
+              ),
+              
+              // Main content
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header with logo and verification
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'INDIA TOURISM',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 12,
+                                letterSpacing: 1.5,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'DIGITAL TOURIST ID',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                letterSpacing: 1,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: _isVerified ? Colors.green : Colors.red,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                _isVerified ? Icons.verified : Icons.error,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                _isVerified ? 'VERIFIED' : 'PENDING',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+
+                    // Personal Information
+                    Row(
+                      children: [
+                        // Profile avatar
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.2),
+                            border: Border.all(color: Colors.white, width: 3),
+                          ),
+                          child: Icon(
+                            Icons.person,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        
+                        // Details
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _data!.name.toUpperCase(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              _buildInfoRow('ID', _data!.id.substring(0, 16) + '...'),
+                              const SizedBox(height: 4),
+                              _buildInfoRow('Passport', _data!.passport.isNotEmpty ? _data!.passport : 'Not provided'),
+                              const SizedBox(height: 4),
+                              _buildInfoRow('Valid Until', _formatDate(_data!.expiry)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+
+                    // Bottom info
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Days Remaining',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.8),
+                                fontSize: 12,
+                              ),
+                            ),
+                            Text(
+                              '${_getDaysRemaining()} days',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            Icons.security,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 60,
+          child: Text(
+            '$label:',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.8),
+              fontSize: 12,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQRSection(AppLocalizations l10n, ThemeData theme) {
+    return GlassCard(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(Icons.qr_code, color: AppTheme.primaryBlue, size: 28),
+              const SizedBox(width: 12),
+              Text(
+                'Quick Scan ID',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          
+          // Mock QR Code
+          Container(
+            width: 200,
+            height: 200,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.grey.shade300, width: 2),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: CustomPaint(
+              painter: QRCodePainter(),
+              size: const Size(200, 200),
+            ),
+          ),
+          const SizedBox(height: 16),
+          
+          Text(
+            'Scan this QR code for instant verification',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[600],
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          
+          ElevatedButton.icon(
+            onPressed: _downloadQR,
+            icon: const Icon(Icons.download, color: Colors.white),
+            label: const Text('Download QR', style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryBlue,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusCards(AppLocalizations l10n, ThemeData theme) {
+    return Row(
+      children: [
+        Expanded(
+          child: GlassCard(
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppTheme.successGreen.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.check_circle,
+                    color: AppTheme.successGreen,
+                    size: 32,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Verified',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Identity Confirmed',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: GlassCard(
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryBlue.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.security,
+                    color: AppTheme.primaryBlue,
+                    size: 32,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Blockchain',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Secured',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEmergencyContacts(AppLocalizations l10n, ThemeData theme) {
+    if (_data?.emergencyContacts.isEmpty ?? true) return const SizedBox();
+
+    return GlassCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.emergency, color: AppTheme.dangerRed, size: 28),
+              const SizedBox(width: 12),
+              Text(
+                'Emergency Contacts',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          
+          ..._data!.emergencyContacts.asMap().entries.map((entry) {
+            final index = entry.key;
+            final contact = entry.value;
+            return Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.red.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.red.shade100),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: AppTheme.dangerRed,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.phone,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Emergency Contact ${index + 1}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          contact,
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => _callEmergency(contact),
+                    icon: const Icon(Icons.call, color: AppTheme.dangerRed),
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.red.shade100,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ],
+      ),
+    );
+  }
+
+  void _shareId() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Row(
+          children: [
+            Icon(Icons.share, color: AppTheme.primaryBlue),
+            SizedBox(width: 12),
+            Text('Share Digital ID'),
+          ],
+        ),
+        content: const Text('Share your digital tourist ID with authorities or hotels for instant verification.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('ID shared successfully!'),
+                  backgroundColor: AppTheme.successGreen,
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryBlue),
+            child: const Text('Share', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _downloadQR() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.download, color: Colors.white),
+            SizedBox(width: 8),
+            Text('QR Code downloaded to gallery!'),
+          ],
+        ),
+        backgroundColor: AppTheme.successGreen,
+      ),
+    );
+  }
+
+  void _callEmergency(String contact) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Row(
+          children: [
+            Icon(Icons.phone, color: AppTheme.dangerRed),
+            SizedBox(width: 12),
+            Text('Emergency Call'),
+          ],
+        ),
+        content: Text('Calling $contact...'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Calling $contact...'),
+                  backgroundColor: AppTheme.dangerRed,
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.dangerRed),
+            child: const Text('Call', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _cardController.dispose();
+    _qrController.dispose();
+    super.dispose();
+  }
+}
+
+// Custom QR Code Painter
+class QRCodePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.fill;
+
+    final double cellSize = size.width / 21; // 21x21 QR grid
+
+    // Mock QR code pattern
+    final qrPattern = [
+      [1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0,0,1],
+      [1,0,1,1,1,0,1,0,1,1,0,1,1,0,1,0,1,1,1,0,1],
+      [1,0,1,1,1,0,1,0,0,0,1,0,0,0,1,0,1,1,1,0,1],
+      [1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,0,1],
+      [1,0,0,0,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1],
+      [0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0],
+      [1,0,1,0,1,0,1,1,0,0,1,0,0,1,1,0,1,0,1,0,1],
+      [0,1,0,1,0,1,0,0,1,1,0,1,1,0,0,1,0,1,0,1,0],
+      [1,0,1,0,1,0,1,1,0,0,1,0,0,1,1,0,1,0,1,0,1],
+      [0,1,0,1,0,1,0,0,1,1,0,1,1,0,0,1,0,1,0,1,0],
+      [1,0,1,0,1,0,1,1,0,0,1,0,0,1,1,0,1,0,1,0,1],
+      [0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,0],
+      [1,1,1,1,1,1,1,0,0,0,1,0,0,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,1,0,1,1,0,1,1,0,1,0,0,0,0,0,1],
+      [1,0,1,1,1,0,1,0,0,0,1,0,0,0,1,0,1,1,1,0,1],
+      [1,0,1,1,1,0,1,0,1,1,0,1,1,0,1,0,1,1,1,0,1],
+      [1,0,1,1,1,0,1,0,0,0,1,0,0,0,1,0,1,1,1,0,1],
+      [1,0,0,0,0,0,1,0,1,1,0,1,1,0,1,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,0,0,0,1,0,0,1,1,1,1,1,1,1,1],
+    ];
+
+    for (int row = 0; row < qrPattern.length; row++) {
+      for (int col = 0; col < qrPattern[row].length; col++) {
+        if (qrPattern[row][col] == 1) {
+          canvas.drawRect(
+            Rect.fromLTWH(
+              col * cellSize + 10,
+              row * cellSize + 10,
+              cellSize,
+              cellSize,
+            ),
+            paint,
+          );
+        }
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
