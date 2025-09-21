@@ -42,8 +42,7 @@ dependencies:
   
   # QR Code generation (for digital ID)
   qr_flutter: ^4.1.0
-  # Removed qr_code_scanner due to compatibility issues
-  # Alternative: mobile_scanner: ^5.0.1 (if QR scanning needed later)
+  qr_code_scanner: ^1.0.1
   
   # Image handling
   image_picker: ^1.1.2
@@ -78,12 +77,12 @@ flutter:
   generate: true
   uses-material-design: true
   
-  assets:
-    - lib/l10n/
-    - assets/images/
-    - assets/icons/
-    - assets/animations/
-    - assets/sounds/
+    # assets:
+    #   - lib/l10n/
+    #   - assets/images/
+    #   - assets/icons/
+    #   - assets/animations/
+    #   - assets/sounds/
   
   fonts:
     - family: Poppins

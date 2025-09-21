@@ -4,9 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../generated/app_localizations.dart';
 import '../models/tourist_data.dart';
 import '../core/theme/app_theme.dart';
-import '../widgets/safety_score_card.dart' as safety;
-import '../widgets/emergency_button.dart' as emergency;
-import '../widgets/glass_card.dart' as glass;
+import '../widgets/safety_score_card.dart';
+import '../widgets/emergency_button.dart' as eb;
+import '../widgets/glass_card.dart' as gc;
 import '../widgets/animated_fab.dart';
 import 'id_screen.dart';
 import 'map_screen.dart';
@@ -256,7 +256,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
                 const SizedBox(height: 20),
 
                 // Emergency Section
-                GlassCard(
+                gc.GlassCard(
                   child: Column(
                     children: [
                       Text(
@@ -270,7 +270,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
                         animation: _pulseAnimation,
                         builder: (context, child) => Transform.scale(
                           scale: _isInDangerZone ? _pulseAnimation.value : 1.0,
-                          child: EmergencyButton(
+                          child: eb.EmergencyButton(
                             onPressed: _simulatePanic,
                             isActive: _isInDangerZone,
                           ),
@@ -363,7 +363,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
     return Row(
       children: [
         Expanded(
-          child: GlassCard(
+          child: gc.GlassCard(
             child: Column(
               children: [
                 Icon(
@@ -388,7 +388,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
         ),
         const SizedBox(width: 16),
         Expanded(
-          child: GlassCard(
+          child: gc.GlassCard(
             child: Column(
               children: [
                 Icon(
@@ -416,7 +416,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
   }
 
   Widget _buildItinerarySection(AppLocalizations l10n, ThemeData theme) {
-    return GlassCard(
+    return gc.GlassCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -508,7 +508,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
   }
 
   Widget _buildQuickActions(AppLocalizations l10n, ThemeData theme) {
-    return GlassCard(
+    return gc.GlassCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

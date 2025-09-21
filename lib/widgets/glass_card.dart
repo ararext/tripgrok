@@ -2,36 +2,40 @@ import 'package:flutter/material.dart';
 
 class GlassCard extends StatelessWidget {
   final Widget child;
-  final double opacity; // configurable transparency
-  final EdgeInsetsGeometry padding;
+  final double blur;
+  final double opacity;
 
   const GlassCard({
-    super.key,
+    Key? key,
     required this.child,
-    this.opacity = 0.2, // default opacity
-    this.padding = const EdgeInsets.all(12),
-  });
+    this.blur = 10,
+    this.opacity = 0.1,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      padding: padding,
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(opacity),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+        color: isDark
+            ? Colors.white.withOpacity(opacity)
+            : Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.2),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            spreadRadius: 2,
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: child,
-      ),
+      child: child,
     );
   }
 }

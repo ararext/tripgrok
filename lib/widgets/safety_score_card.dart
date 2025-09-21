@@ -1,4 +1,3 @@
-// lib/widgets/safety_score_card.dart
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import '../core/theme/app_theme.dart';
@@ -43,9 +42,16 @@ class _SafetyScoreCardState extends State<SafetyScoreCard>
     return AppTheme.dangerRed;
   }
 
+  String _getSafetyLabel(double score) {
+    if (score >= 80) return "SAFE";
+    if (score >= 60) return "CAUTION";
+    return "DANGER";
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -63,6 +69,7 @@ class _SafetyScoreCardState extends State<SafetyScoreCard>
       ),
       child: Column(
         children: [
+          /// Header Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -94,6 +101,8 @@ class _SafetyScoreCardState extends State<SafetyScoreCard>
             ],
           ),
           const SizedBox(height: 20),
+
+          /// Score + Details
           Row(
             children: [
               Expanded(
@@ -123,7 +132,7 @@ class _SafetyScoreCardState extends State<SafetyScoreCard>
                               ),
                             ),
                             Text(
-                              'SAFE',
+                              _getSafetyLabel(widget.score),
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: Colors.white,
                                 letterSpacing: 2,
@@ -137,14 +146,19 @@ class _SafetyScoreCardState extends State<SafetyScoreCard>
                 ),
               ),
               const SizedBox(width: 20),
+
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildStatusRow(
                       'Location Safety',
-                      widget.score >= 80 ? 'High' : widget.score >= 60 ? 'Medium' : 'Low',
-                      widget.score >= 80 ? Colors.green : widget.score >= 60 ? Colors.orange : Colors.red,
+                      widget.score >= 80
+                          ? 'High'
+                          : widget.score >= 60
+                              ? 'Medium'
+                              : 'Low',
+                      _getScoreColor(widget.score),
                     ),
                     const SizedBox(height: 12),
                     _buildStatusRow(
@@ -231,16 +245,15 @@ class CircularProgressPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = (size.width - strokeWidth) / 2;
 
-    // Background circle
+    /// Background circle
     final backgroundPaint = Paint()
       ..color = backgroundColor
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
-
     canvas.drawCircle(center, radius, backgroundPaint);
 
-    // Progress arc
+    /// Progress arc
     final progressPaint = Paint()
       ..color = progressColor
       ..strokeWidth = strokeWidth
@@ -261,218 +274,4 @@ class CircularProgressPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-}
-
-// lib/widgets/emergency_button.dart
-class EmergencyButton extends StatefulWidget {
-  final VoidCallback onPressed;
-  final bool isActive;
-
-  const EmergencyButton({
-    Key? key,
-    required this.onPressed,
-    this.isActive = false,
-  }) : super(key: key);
-
-  @override
-  State<EmergencyButton> createState() => _EmergencyButtonState();
-}
-
-class _EmergencyButtonState extends State<EmergencyButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-  late Animation<Color?> _colorAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 150),
-      vsync: this,
-    );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.9).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-    _colorAnimation = ColorTween(
-      begin: AppTheme.dangerRed,
-      end: AppTheme.dangerRed.withOpacity(0.8),
-    ).animate(_controller);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => _controller.forward(),
-      onTapUp: (_) => _controller.reverse(),
-      onTapCancel: () => _controller.reverse(),
-      onTap: widget.onPressed,
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    _colorAnimation.value ?? AppTheme.dangerRed,
-                    AppTheme.dangerRed.withOpacity(0.7),
-                  ],
-                ),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.dangerRed.withOpacity(0.4),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                  if (widget.isActive)
-                    BoxShadow(
-                      color: AppTheme.dangerRed.withOpacity(0.6),
-                      blurRadius: 40,
-                      spreadRadius: 10,
-                    ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.emergency,
-                    size: 40,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'SOS',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-}
-
-// lib/widgets/glass_card.dart
-class GlassCard extends StatelessWidget {
-  final Widget child;
-  final double blur;
-  final double opacity;
-
-  const GlassCard({
-    Key? key,
-    required this.child,
-    this.blur = 10,
-    this.opacity = 0.1,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withOpacity(opacity)
-            : Colors.white.withOpacity(0.9),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.2),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: child,
-    );
-  }
-}
-
-// lib/widgets/animated_fab.dart
-class AnimatedFAB extends StatefulWidget {
-  final VoidCallback onPressed;
-  final IconData icon;
-  final String label;
-
-  const AnimatedFAB({
-    Key? key,
-    required this.onPressed,
-    required this.icon,
-    required this.label,
-  }) : super(key: key);
-
-  @override
-  State<AnimatedFAB> createState() => _AnimatedFABState();
-}
-
-class _AnimatedFABState extends State<AnimatedFAB>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    );
-    _controller.forward();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: _animation.value,
-          child: FloatingActionButton.extended(
-            onPressed: widget.onPressed,
-            backgroundColor: AppTheme.primaryBlue,
-            icon: Icon(widget.icon, color: Colors.white),
-            label: Text(
-              widget.label,
-              style: const TextStyle(color: Colors.white),
-            ),
-            elevation: 12,
-          ),
-        );
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 }
