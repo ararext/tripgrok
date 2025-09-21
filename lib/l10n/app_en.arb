@@ -1,0 +1,14 @@
+{
+  "appTitle": "Tourist Safety App",
+  "login": "Login / Check-in",
+  "dashboard": "Dashboard",
+  "digitalId": "Digital Tourist ID",
+  "safetyScore": "Safety Score",
+  "emergency": "Emergency SOS",
+  "map": "Interactive Map",
+  "settings": "Settings",
+  "addItinerary": "Add Itinerary Item",
+  "alertHighRisk": "Alert: Entering high-risk zone!",
+  "panicButton": "Panic Button",
+  "language": "Select Language"
+}
