@@ -18,7 +18,7 @@ import 'app_localizations_hi.dart';
 /// `supportedLocales` list. For example:
 ///
 /// ```dart
-/// import 'l10n/app_localizations.dart';
+/// import 'generated/app_localizations.dart';
 ///
 /// return MaterialApp(
 ///   localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -166,6 +166,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select Language'**
   String get language;
+
+  /// No description provided for @companionTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Digital Safety Companion'**
+  String get companionTagline;
+
+  /// No description provided for @fullNameAadhaarLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name / Aadhaar Number'**
+  String get fullNameAadhaarLabel;
+
+  /// No description provided for @fullNameValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name or Aadhaar number'**
+  String get fullNameValidation;
+
+  /// No description provided for @passportOptionalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport Number (Optional for Indians)'**
+  String get passportOptionalLabel;
+
+  /// No description provided for @lightMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Light Mode'**
+  String get lightMode;
+
+  /// No description provided for @darkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get darkMode;
+
+  /// No description provided for @keyFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Key Features'**
+  String get keyFeatures;
+
+  /// No description provided for @featureDigitalIdTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Digital ID'**
+  String get featureDigitalIdTitle;
+
+  /// No description provided for @featureDigitalIdDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Blockchain-based verification'**
+  String get featureDigitalIdDesc;
+
+  /// No description provided for @featureLiveTrackingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Tracking'**
+  String get featureLiveTrackingTitle;
+
+  /// No description provided for @featureLiveTrackingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Real-time safety monitoring'**
+  String get featureLiveTrackingDesc;
+
+  /// No description provided for @featureEmergencySosTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency SOS'**
+  String get featureEmergencySosTitle;
+
+  /// No description provided for @featureEmergencySosDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'One-tap help button'**
+  String get featureEmergencySosDesc;
+
+  /// No description provided for @featureSafeRoutesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Safe Routes'**
+  String get featureSafeRoutesTitle;
+
+  /// No description provided for @featureSafeRoutesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-powered navigation'**
+  String get featureSafeRoutesDesc;
+
+  /// No description provided for @welcomeBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back!'**
+  String get welcomeBack;
+
+  /// No description provided for @defaultTouristName.
+  ///
+  /// In en, this message translates to:
+  /// **'Tourist'**
+  String get defaultTouristName;
+
+  /// No description provided for @riskAlertTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Risk Alert!'**
+  String get riskAlertTitle;
+
+  /// No description provided for @riskAlertMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You have entered a high-risk zone. Your safety score has decreased.'**
+  String get riskAlertMessage;
+
+  /// No description provided for @riskAlertActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested actions:\n• Stay in well-lit areas\n• Keep emergency contacts ready\n• Consider changing route'**
+  String get riskAlertActions;
+
+  /// No description provided for @riskAlertUnderstood.
+  ///
+  /// In en, this message translates to:
+  /// **'Understood'**
+  String get riskAlertUnderstood;
+
+  /// No description provided for @viewSafeRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'View Safe Route'**
+  String get viewSafeRoute;
+
+  /// No description provided for @emergencyAlertSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Alert Sent!'**
+  String get emergencyAlertSent;
+
+  /// No description provided for @emergencyNotified.
+  ///
+  /// In en, this message translates to:
+  /// **'🚨 Emergency services have been notified'**
+  String get emergencyNotified;
+
+  /// No description provided for @locationShared.
+  ///
+  /// In en, this message translates to:
+  /// **'📍 Your location has been shared'**
+  String get locationShared;
+
+  /// No description provided for @contactsAlerted.
+  ///
+  /// In en, this message translates to:
+  /// **'📞 Emergency contacts alerted'**
+  String get contactsAlerted;
+
+  /// No description provided for @helpOnTheWay.
+  ///
+  /// In en, this message translates to:
+  /// **'Help is on the way!'**
+  String get helpOnTheWay;
+
+  /// No description provided for @nearbyPolice.
+  ///
+  /// In en, this message translates to:
+  /// **'Nearby Police'**
+  String get nearbyPolice;
+
+  /// No description provided for @nearbyHospitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Nearby Hospitals'**
+  String get nearbyHospitals;
+
+  /// No description provided for @yourItinerary.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Itinerary'**
+  String get yourItinerary;
+
+  /// No description provided for @noItineraryItems.
+  ///
+  /// In en, this message translates to:
+  /// **'No itinerary items yet'**
+  String get noItineraryItems;
+
+  /// No description provided for @quickActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Actions'**
+  String get quickActions;
+
+  /// No description provided for @itineraryAddedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Itinerary item added successfully!'**
+  String get itineraryAddedSuccess;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

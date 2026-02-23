@@ -233,7 +233,7 @@ class _SettingsScreenState extends State<SettingsScreen>
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.5),
             shape: BoxShape.circle,
           ),
           child: IconButton(
@@ -632,7 +632,7 @@ class _SettingsScreenState extends State<SettingsScreen>
       trailing: Switch(
         value: value,
         onChanged: onChanged,
-        activeColor: AppTheme.primaryBlue,
+        activeThumbColor: AppTheme.primaryBlue,
       ),
     );
   }
@@ -738,29 +738,28 @@ class _SettingsScreenState extends State<SettingsScreen>
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text('Map Style'),
-        content: Column(
+        content: const Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            RadioListTile<String>(
+            ListTile(
               title: const Text('Standard'),
-              value: 'standard',
-              groupValue: 'standard',
-              onChanged: (value) => Navigator.pop(context),
+              trailing: Icon(Icons.check, color: AppTheme.primaryBlue),
             ),
-            RadioListTile<String>(
+            ListTile(
               title: const Text('Satellite'),
-              value: 'satellite',
-              groupValue: 'standard',
-              onChanged: (value) => Navigator.pop(context),
             ),
-            RadioListTile<String>(
+            ListTile(
               title: const Text('Terrain'),
-              value: 'terrain',
-              groupValue: 'standard',
-              onChanged: (value) => Navigator.pop(context),
             ),
           ],
         ),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryBlue),
+            child: const Text('Done', style: TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
     );
   }

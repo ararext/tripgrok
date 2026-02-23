@@ -6,7 +6,6 @@ import '../models/tourist_data.dart';
 import '../core/theme/app_theme.dart';
 import '../core/storage/tourist_secure_storage.dart';
 import '../widgets/glass_card.dart';
-import 'dart:math' as math;
 
 class IdScreen extends StatefulWidget {
   const IdScreen({Key? key}) : super(key: key);
@@ -210,7 +209,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.5),
             shape: BoxShape.circle,
           ),
           child: IconButton(
@@ -230,7 +229,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
         ),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.5),
             shape: BoxShape.circle,
           ),
           child: IconButton(
@@ -241,7 +240,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
         const SizedBox(width: 8),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.5),
             shape: BoxShape.circle,
           ),
           child: IconButton(
@@ -266,7 +265,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -297,7 +296,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
                   height: 200,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -309,7 +308,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
                   height: 150,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -330,7 +329,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
                             Text(
                               'INDIA TOURISM',
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.5),
                                 fontSize: 12,
                                 letterSpacing: 1.5,
                                 fontWeight: FontWeight.w500,
@@ -387,7 +386,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
                           height: 80,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.5),
                             border: Border.all(color: Colors.white, width: 3),
                           ),
                           child: Icon(
@@ -434,7 +433,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
                             Text(
                               'Days Remaining',
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.8),
+                                color: Colors.white.withValues(alpha: 0.5),
                                 fontSize: 12,
                               ),
                             ),
@@ -451,7 +450,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.5),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
@@ -480,7 +479,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
           child: Text(
             '$label:',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withValues(alpha: 0.5),
               fontSize: 12,
             ),
           ),
@@ -527,7 +526,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
               border: Border.all(color: Colors.grey.shade300, width: 2),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.5),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -572,7 +571,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppTheme.successGreen.withOpacity(0.1),
+                    color: AppTheme.successGreen.withValues(alpha: 0.5),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -606,7 +605,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryBlue.withOpacity(0.1),
+                    color: AppTheme.primaryBlue.withValues(alpha: 0.5),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(

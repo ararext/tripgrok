@@ -61,7 +61,7 @@ class _SafetyScoreCardState extends State<SafetyScoreCard>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: _getScoreColor(widget.score).withOpacity(0.3),
+            color: _getScoreColor(widget.score).withValues(alpha: 0.5),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -87,7 +87,7 @@ class _SafetyScoreCardState extends State<SafetyScoreCard>
                   Text(
                     widget.location,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.5),
                     ),
                   ),
                 ],
@@ -114,7 +114,7 @@ class _SafetyScoreCardState extends State<SafetyScoreCard>
                       painter: CircularProgressPainter(
                         progress: _animation.value,
                         strokeWidth: 12,
-                        backgroundColor: Colors.white.withOpacity(0.3),
+                        backgroundColor: Colors.white.withValues(alpha: 0.5),
                         progressColor: Colors.white,
                       ),
                       child: Container(
@@ -201,7 +201,7 @@ class _SafetyScoreCardState extends State<SafetyScoreCard>
               Text(
                 label,
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.5),
                   fontSize: 12,
                 ),
               ),

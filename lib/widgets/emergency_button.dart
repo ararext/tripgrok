@@ -33,7 +33,7 @@ class _EmergencyButtonState extends State<EmergencyButton>
     );
     _colorAnimation = ColorTween(
       begin: AppTheme.dangerRed,
-      end: AppTheme.dangerRed.withOpacity(0.8),
+      end: AppTheme.dangerRed.withValues(alpha: 0.5),
     ).animate(_controller);
   }
 
@@ -56,19 +56,19 @@ class _EmergencyButtonState extends State<EmergencyButton>
                 gradient: RadialGradient(
                   colors: [
                     _colorAnimation.value ?? AppTheme.dangerRed,
-                    AppTheme.dangerRed.withOpacity(0.7),
+                    AppTheme.dangerRed.withValues(alpha: 0.5),
                   ],
                 ),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppTheme.dangerRed.withOpacity(0.4),
+                    color: AppTheme.dangerRed.withValues(alpha: 0.5),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
                   if (widget.isActive)
                     BoxShadow(
-                      color: AppTheme.dangerRed.withOpacity(0.6),
+                      color: AppTheme.dangerRed.withValues(alpha: 0.5),
                       blurRadius: 40,
                       spreadRadius: 10,
                     ),

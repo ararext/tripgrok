@@ -35,3 +35,7 @@ flutter test
 - Added mounted-guard protections for async/delayed UI flows to prevent post-dispose updates.
 - Wired settings screen theme/language controls to apply live via app-level callbacks (no restart required).
 - Updated logout flow to clear only tourist session data while preserving user preferences.
+- Pruned unused dependencies from `pubspec.yaml` to match actual imports and reduce maintenance surface.
+- Removed tracked Android build artifacts and deleted unused `lib/core/theme/core_theme.dart`.
+- Expanded localization coverage for primary login/dashboard user flows with new English/Hindi ARB keys.
+- Replaced deprecated opacity usage patterns and updated deprecated UI APIs (`DropdownButtonFormField` initial value, map-style dialog radio usage).

@@ -12,7 +12,6 @@ import 'id_screen.dart';
 import 'map_screen.dart';
 import 'settings_screen.dart';
 import 'login_screen.dart';
-import 'dart:math' as math;
 
 class EnhancedDashboardScreen extends StatefulWidget {
   final VoidCallback? onThemeToggle;
@@ -108,7 +107,10 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
       await TouristSecureStorage.saveItinerary(_itinerary);
       if (!mounted) return;
       _itineraryController.clear();
-      _showSnackBar('Itinerary item added successfully!', Colors.green);
+      _showSnackBar(
+        AppLocalizations.of(context)!.itineraryAddedSuccess,
+        Colors.green,
+      );
     }
   }
 
@@ -123,19 +125,22 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
           children: [
             Icon(Icons.warning, color: Colors.red.shade600, size: 32),
             const SizedBox(width: 12),
-            const Text('Risk Alert!', style: TextStyle(color: Colors.red)),
+            Text(
+              AppLocalizations.of(context)!.riskAlertTitle,
+              style: const TextStyle(color: Colors.red),
+            ),
           ],
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'You have entered a high-risk zone. Your safety score has decreased.',
+              AppLocalizations.of(context)!.riskAlertMessage,
               style: TextStyle(color: Colors.red.shade700),
             ),
             const SizedBox(height: 16),
             Text(
-              'Suggested actions:\n• Stay in well-lit areas\n• Keep emergency contacts ready\n• Consider changing route',
+              AppLocalizations.of(context)!.riskAlertActions,
               style: TextStyle(color: Colors.grey.shade700),
             ),
           ],
@@ -143,7 +148,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Understood'),
+            child: Text(AppLocalizations.of(context)!.riskAlertUnderstood),
           ),
           ElevatedButton(
             onPressed: () {
@@ -151,7 +156,10 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
               _navigateToMap();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('View Safe Route', style: TextStyle(color: Colors.white)),
+            child: Text(
+              AppLocalizations.of(context)!.viewSafeRoute,
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -168,20 +176,23 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
           children: [
             Icon(Icons.emergency, color: Colors.red.shade600, size: 32),
             const SizedBox(width: 12),
-            const Text('Emergency Alert Sent!', style: TextStyle(color: Colors.red)),
+            Text(
+              AppLocalizations.of(context)!.emergencyAlertSent,
+              style: const TextStyle(color: Colors.red),
+            ),
           ],
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('🚨 Emergency services have been notified'),
+            Text(AppLocalizations.of(context)!.emergencyNotified),
             const SizedBox(height: 8),
-            const Text('📍 Your location has been shared'),
+            Text(AppLocalizations.of(context)!.locationShared),
             const SizedBox(height: 8),
-            const Text('📞 Emergency contacts alerted'),
+            Text(AppLocalizations.of(context)!.contactsAlerted),
             const SizedBox(height: 16),
             Text(
-              'Help is on the way!',
+              AppLocalizations.of(context)!.helpOnTheWay,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -315,13 +326,13 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Welcome back!',
+              l10n.welcomeBack,
               style: theme.textTheme.titleLarge?.copyWith(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.5),
               ),
             ),
             Text(
-              _data?.name ?? 'Tourist',
+              _data?.name ?? l10n.defaultTouristName,
               style: theme.textTheme.headlineMedium?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -344,7 +355,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
               ),
               icon: const Icon(Icons.settings, color: Colors.white),
               style: IconButton.styleFrom(
-                backgroundColor: Colors.white.withOpacity(0.2),
+                backgroundColor: Colors.white.withValues(alpha: 0.5),
               ),
             ),
             const SizedBox(width: 8),
@@ -365,7 +376,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
               },
               icon: const Icon(Icons.logout, color: Colors.white),
               style: IconButton.styleFrom(
-                backgroundColor: Colors.white.withOpacity(0.2),
+                backgroundColor: Colors.white.withValues(alpha: 0.5),
               ),
             ),
           ],
@@ -394,7 +405,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
                   ),
                 ),
                 Text(
-                  'Nearby Police',
+                  l10n.nearbyPolice,
                   style: theme.textTheme.bodySmall,
                 ),
               ],
@@ -419,7 +430,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
                   ),
                 ),
                 Text(
-                  'Nearby Hospitals',
+                  l10n.nearbyHospitals,
                   style: theme.textTheme.bodySmall,
                 ),
               ],
@@ -440,7 +451,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
               Icon(Icons.list_alt, color: AppTheme.primaryBlue),
               const SizedBox(width: 8),
               Text(
-                'Your Itinerary',
+                l10n.yourItinerary,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -451,7 +462,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
           if (_itinerary.isEmpty)
             Center(
               child: Text(
-                'No itinerary items yet',
+                l10n.noItineraryItems,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: Colors.grey,
                 ),
@@ -465,7 +476,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
                 margin: const EdgeInsets.only(bottom: 8),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryBlue.withOpacity(0.1),
+                  color: AppTheme.primaryBlue.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -528,7 +539,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Quick Actions',
+            l10n.quickActions,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),

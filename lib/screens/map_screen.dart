@@ -5,7 +5,6 @@ import 'package:latlong2/latlong.dart';
 import '../generated/app_localizations.dart';
 import '../core/theme/app_theme.dart';
 import '../widgets/glass_card.dart';
-import 'dart:math' as math;
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -132,7 +131,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        backgroundColor: _getRiskColor(zone.riskLevel).withOpacity(0.1),
+        backgroundColor: _getRiskColor(zone.riskLevel).withValues(alpha: 0.5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
@@ -333,7 +332,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
           CircleMarker(
             point: zone.center,
             radius: zone.radius.toDouble(),
-            color: _getRiskColor(zone.riskLevel).withOpacity(0.3),
+            color: _getRiskColor(zone.riskLevel).withValues(alpha: 0.5),
             borderColor: _getRiskColor(zone.riskLevel),
             borderStrokeWidth: 2,
           ),
@@ -366,7 +365,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: _getSafetyColor(location.type).withOpacity(0.4),
+                          color: _getSafetyColor(location.type).withValues(alpha: 0.5),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -406,7 +405,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                     height: 60 * _pulseAnimation.value,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppTheme.primaryBlue.withOpacity(0.3 * (1 - _pulseAnimation.value)),
+                      color: AppTheme.primaryBlue.withValues(
+                        alpha: 0.3 * (1 - _pulseAnimation.value),
+                      ),
                     ),
                   ),
                   // Main marker
@@ -419,7 +420,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                       border: Border.all(color: Colors.white, width: 3),
                       boxShadow: [
                         BoxShadow(
-                          color: AppTheme.primaryBlue.withOpacity(0.4),
+                          color: AppTheme.primaryBlue.withValues(alpha: 0.5),
                           blurRadius: 12,
                           offset: const Offset(0, 6),
                         ),
@@ -454,7 +455,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.5),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -488,7 +489,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.5),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -528,7 +529,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
             end: Alignment.bottomCenter,
             colors: [
               Colors.transparent,
-              Colors.black.withOpacity(0.8),
+              Colors.black.withValues(alpha: 0.5),
             ],
           ),
         ),
@@ -561,7 +562,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: AppTheme.successGreen.withOpacity(0.1),
+                      color: AppTheme.successGreen.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -620,7 +621,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: value ? color.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+            color: value ? color.withValues(alpha: 0.5) : Colors.grey.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: value ? color : Colors.grey,

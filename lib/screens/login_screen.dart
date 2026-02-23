@@ -172,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen>
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppTheme.primaryBlue.withOpacity(0.3),
+                                  color: AppTheme.primaryBlue.withValues(alpha: 0.5),
                                   blurRadius: 30,
                                   offset: const Offset(0, 15),
                                 ),
@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen>
                               fontWeight: FontWeight.bold,
                               shadows: [
                                 Shadow(
-                                  color: Colors.black.withOpacity(0.3),
+                                  color: Colors.black.withValues(alpha: 0.5),
                                   offset: const Offset(0, 2),
                                   blurRadius: 4,
                                 ),
@@ -202,11 +202,11 @@ class _LoginScreenState extends State<LoginScreen>
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Your Digital Safety Companion',
+                            l10n.companionTagline,
                             style: theme.textTheme.bodyLarge?.copyWith(
                               color: isDark
                                   ? Colors.white70
-                                  : Colors.white.withOpacity(0.9),
+                                  : Colors.white.withValues(alpha: 0.5),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -241,7 +241,7 @@ class _LoginScreenState extends State<LoginScreen>
                             TextFormField(
                               controller: _nameController,
                               decoration: InputDecoration(
-                                labelText: 'Full Name / Aadhaar Number',
+                                labelText: l10n.fullNameAadhaarLabel,
                                 prefixIcon: const Icon(Icons.person),
                                 filled: true,
                                 fillColor:
@@ -249,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen>
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter your name or Aadhaar number';
+                                  return l10n.fullNameValidation;
                                 }
                                 return null;
                               },
@@ -261,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen>
                               controller: _passportController,
                               decoration: InputDecoration(
                                 labelText:
-                                    'Passport Number (Optional for Indians)',
+                                    l10n.passportOptionalLabel,
                                 prefixIcon: const Icon(Icons.credit_card),
                                 filled: true,
                                 fillColor:
@@ -276,7 +276,7 @@ class _LoginScreenState extends State<LoginScreen>
 
                             // Language Selection
                             DropdownButtonFormField<String>(
-                              value: _selectedLanguage,
+                              initialValue: _selectedLanguage,
                               decoration: InputDecoration(
                                 labelText: l10n.language,
                                 prefixIcon: const Icon(Icons.language),
@@ -365,7 +365,7 @@ class _LoginScreenState extends State<LoginScreen>
                       color: Colors.white,
                     ),
                     label: Text(
-                      isDark ? 'Light Mode' : 'Dark Mode',
+                      isDark ? l10n.lightMode : l10n.darkMode,
                       style: const TextStyle(color: Colors.white),
                     ),
                   ),
@@ -381,23 +381,23 @@ class _LoginScreenState extends State<LoginScreen>
     final features = [
       {
         'icon': Icons.security,
-        'title': 'Digital ID',
-        'description': 'Blockchain-based verification',
+        'title': l10n.featureDigitalIdTitle,
+        'description': l10n.featureDigitalIdDesc,
       },
       {
         'icon': Icons.location_on,
-        'title': 'Live Tracking',
-        'description': 'Real-time safety monitoring',
+        'title': l10n.featureLiveTrackingTitle,
+        'description': l10n.featureLiveTrackingDesc,
       },
       {
         'icon': Icons.emergency,
-        'title': 'Emergency SOS',
-        'description': 'One-tap help button',
+        'title': l10n.featureEmergencySosTitle,
+        'description': l10n.featureEmergencySosDesc,
       },
       {
         'icon': Icons.map,
-        'title': 'Safe Routes',
-        'description': 'AI-powered navigation',
+        'title': l10n.featureSafeRoutesTitle,
+        'description': l10n.featureSafeRoutesDesc,
       },
     ];
 
@@ -407,7 +407,7 @@ class _LoginScreenState extends State<LoginScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Key Features',
+            l10n.keyFeatures,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
               color: const Color.fromARGB(255, 122, 10, 197),
@@ -430,11 +430,11 @@ class _LoginScreenState extends State<LoginScreen>
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color:
-                      const Color.fromARGB(255, 107, 106, 106).withOpacity(0.1),
+                      const Color.fromARGB(255, 107, 106, 106).withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color:
-                        const Color.fromARGB(255, 53, 53, 53).withOpacity(0.2),
+                        const Color.fromARGB(255, 53, 53, 53).withValues(alpha: 0.5),
                   ),
                 ),
                 child: Column(
@@ -460,7 +460,7 @@ class _LoginScreenState extends State<LoginScreen>
                       feature['description'] as String,
                       style: TextStyle(
                         color: const Color.fromARGB(255, 148, 44, 245)
-                            .withOpacity(0.8),
+                            .withValues(alpha: 0.5),
                         fontSize: 12,
                       ),
                       textAlign: TextAlign.center,

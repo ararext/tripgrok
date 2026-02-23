@@ -43,4 +43,103 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get language => 'Select Language';
+
+  @override
+  String get companionTagline => 'Your Digital Safety Companion';
+
+  @override
+  String get fullNameAadhaarLabel => 'Full Name / Aadhaar Number';
+
+  @override
+  String get fullNameValidation => 'Please enter your name or Aadhaar number';
+
+  @override
+  String get passportOptionalLabel => 'Passport Number (Optional for Indians)';
+
+  @override
+  String get lightMode => 'Light Mode';
+
+  @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get keyFeatures => 'Key Features';
+
+  @override
+  String get featureDigitalIdTitle => 'Digital ID';
+
+  @override
+  String get featureDigitalIdDesc => 'Blockchain-based verification';
+
+  @override
+  String get featureLiveTrackingTitle => 'Live Tracking';
+
+  @override
+  String get featureLiveTrackingDesc => 'Real-time safety monitoring';
+
+  @override
+  String get featureEmergencySosTitle => 'Emergency SOS';
+
+  @override
+  String get featureEmergencySosDesc => 'One-tap help button';
+
+  @override
+  String get featureSafeRoutesTitle => 'Safe Routes';
+
+  @override
+  String get featureSafeRoutesDesc => 'AI-powered navigation';
+
+  @override
+  String get welcomeBack => 'Welcome back!';
+
+  @override
+  String get defaultTouristName => 'Tourist';
+
+  @override
+  String get riskAlertTitle => 'Risk Alert!';
+
+  @override
+  String get riskAlertMessage => 'You have entered a high-risk zone. Your safety score has decreased.';
+
+  @override
+  String get riskAlertActions => 'Suggested actions:\n• Stay in well-lit areas\n• Keep emergency contacts ready\n• Consider changing route';
+
+  @override
+  String get riskAlertUnderstood => 'Understood';
+
+  @override
+  String get viewSafeRoute => 'View Safe Route';
+
+  @override
+  String get emergencyAlertSent => 'Emergency Alert Sent!';
+
+  @override
+  String get emergencyNotified => '🚨 Emergency services have been notified';
+
+  @override
+  String get locationShared => '📍 Your location has been shared';
+
+  @override
+  String get contactsAlerted => '📞 Emergency contacts alerted';
+
+  @override
+  String get helpOnTheWay => 'Help is on the way!';
+
+  @override
+  String get nearbyPolice => 'Nearby Police';
+
+  @override
+  String get nearbyHospitals => 'Nearby Hospitals';
+
+  @override
+  String get yourItinerary => 'Your Itinerary';
+
+  @override
+  String get noItineraryItems => 'No itinerary items yet';
+
+  @override
+  String get quickActions => 'Quick Actions';
+
+  @override
+  String get itineraryAddedSuccess => 'Itinerary item added successfully!';
 }
