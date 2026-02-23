@@ -139,6 +139,12 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
     return _data!.expiry.difference(DateTime.now()).inDays;
   }
 
+  String _formatIdPreview(String id) {
+    if (id.isEmpty) return 'Not assigned';
+    if (id.length <= 16) return id;
+    return '${id.substring(0, 16)}...';
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -408,7 +414,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              _buildInfoRow('ID', _data!.id.substring(0, 16) + '...'),
+                              _buildInfoRow('ID', _formatIdPreview(_data!.id)),
                               const SizedBox(height: 4),
                               _buildInfoRow('Passport', _data!.passport.isNotEmpty ? _data!.passport : 'Not provided'),
                               const SizedBox(height: 4),

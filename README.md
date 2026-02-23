@@ -1,16 +1,32 @@
-# tripgrok
+# Tripgrok
 
-A new Flutter project.
+Tripgrok is a Flutter-based tourist safety app prototype with:
+- Login/check-in flow
+- Digital tourist ID and QR scanning
+- Safety dashboard with emergency actions
+- Interactive map with risk and safety markers
+- Localization support (English/Hindi)
 
-## Getting Started
+## Prerequisites
 
-This project is a starting point for a Flutter application.
+- Flutter SDK (stable)
+- Dart SDK (as bundled with Flutter)
 
-A few resources to get you started if this is your first Flutter project:
+## Run
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```bash
+flutter pub get
+flutter run
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Quality Checks
+
+```bash
+flutter analyze
+flutter test
+```
+
+## Recent Fixes
+
+- Fixed widget test compilation by updating `MyApp` initialization to use required named parameters (`locale`, `isDarkMode`).
+- Fixed potential runtime crash in the ID screen by safely formatting short/empty tourist IDs before preview rendering.
