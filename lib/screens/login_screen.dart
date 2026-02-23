@@ -10,11 +10,13 @@ import 'enhanced_dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback? onThemeToggle;
+  final ValueChanged<bool>? onThemeChanged;
   final Function(String)? onLocaleChange;
 
   const LoginScreen({
     Key? key,
     this.onThemeToggle,
+    this.onThemeChanged,
     this.onLocaleChange,
   }) : super(key: key);
 
@@ -71,12 +73,14 @@ class _LoginScreenState extends State<LoginScreen>
 
     _logoController.forward();
     Future.delayed(const Duration(milliseconds: 500), () {
+      if (!mounted) return;
       _formController.forward();
     });
   }
 
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
     setState(() {
       _selectedLanguage = prefs.getString('locale') ?? 'en';
     });
@@ -91,6 +95,7 @@ class _LoginScreenState extends State<LoginScreen>
 
     // Simulate API call
     await Future.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
 
     final mockData = TouristData(
       id: 'BLOCKCHAIN_ID_${DateTime.now().millisecondsSinceEpoch}',
@@ -102,30 +107,33 @@ class _LoginScreenState extends State<LoginScreen>
     );
 
     await TouristSecureStorage.saveTouristData(mockData);
+    if (!mounted) return;
 
     setState(() {
       _isLoading = false;
     });
 
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const EnhancedDashboardScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(1.0, 0.0),
-                end: Offset.zero,
-              ).animate(animation),
-              child: child,
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 600),
-        ),
-      );
-    }
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            EnhancedDashboardScreen(
+              onThemeToggle: widget.onThemeToggle,
+              onThemeChanged: widget.onThemeChanged,
+              onLocaleChange: widget.onLocaleChange,
+            ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 600),
+      ),
+    );
   }
 
   @override

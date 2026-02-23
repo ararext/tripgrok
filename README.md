@@ -32,3 +32,6 @@ flutter test
 - Fixed potential runtime crash in the ID screen by safely formatting short/empty tourist IDs before preview rendering.
 - Migrated tourist identity data storage from `SharedPreferences` to `flutter_secure_storage` for sensitive fields.
 - Added iOS camera permission usage description for QR scan support (`NSCameraUsageDescription`).
+- Added mounted-guard protections for async/delayed UI flows to prevent post-dispose updates.
+- Wired settings screen theme/language controls to apply live via app-level callbacks (no restart required).
+- Updated logout flow to clear only tourist session data while preserving user preferences.

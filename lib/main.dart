@@ -41,6 +41,15 @@ class _MyAppState extends State<MyApp> {
     await prefs.setBool('isDarkMode', _isDarkMode);
   }
 
+  void setThemeMode(bool isDarkMode) async {
+    if (_isDarkMode == isDarkMode) return;
+    setState(() {
+      _isDarkMode = isDarkMode;
+    });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isDarkMode', _isDarkMode);
+  }
+
   void changeLocale(String locale) async {
     setState(() {
       _locale = locale;
@@ -66,6 +75,7 @@ class _MyAppState extends State<MyApp> {
       locale: Locale(_locale),
       home: LoginScreen(
         onThemeToggle: toggleTheme,
+        onThemeChanged: setThemeMode,
         onLocaleChange: changeLocale,
       ),
     );

@@ -1,6 +1,5 @@
 // lib/screens/enhanced_dashboard_screen.dart
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../generated/app_localizations.dart';
 import '../models/tourist_data.dart';
 import '../core/theme/app_theme.dart';
@@ -16,7 +15,16 @@ import 'login_screen.dart';
 import 'dart:math' as math;
 
 class EnhancedDashboardScreen extends StatefulWidget {
-  const EnhancedDashboardScreen({super.key});
+  final VoidCallback? onThemeToggle;
+  final ValueChanged<bool>? onThemeChanged;
+  final ValueChanged<String>? onLocaleChange;
+
+  const EnhancedDashboardScreen({
+    super.key,
+    this.onThemeToggle,
+    this.onThemeChanged,
+    this.onLocaleChange,
+  });
 
   @override
   State<EnhancedDashboardScreen> createState() => _EnhancedDashboardScreenState();
@@ -85,6 +93,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
 
   Future<void> _loadData() async {
     final secureData = await TouristSecureStorage.loadTouristData();
+    if (!mounted) return;
     setState(() {
       _data = secureData;
       _itinerary = _data!.itinerary;
@@ -97,6 +106,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
         _itinerary.add(_itineraryController.text);
       });
       await TouristSecureStorage.saveItinerary(_itinerary);
+      if (!mounted) return;
       _itineraryController.clear();
       _showSnackBar('Itinerary item added successfully!', Colors.green);
     }
@@ -324,7 +334,13 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
             IconButton(
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                MaterialPageRoute(
+                  builder: (context) => SettingsScreen(
+                    onThemeToggle: widget.onThemeToggle,
+                    onThemeChanged: widget.onThemeChanged,
+                    onLocaleChange: widget.onLocaleChange,
+                  ),
+                ),
               ),
               icon: const Icon(Icons.settings, color: Colors.white),
               style: IconButton.styleFrom(
@@ -334,13 +350,17 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
             const SizedBox(width: 8),
             IconButton(
               onPressed: () async {
-                final prefs = await SharedPreferences.getInstance();
-                await prefs.clear();
                 await TouristSecureStorage.clearTouristData();
                 if (!mounted) return;
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(
+                      onThemeToggle: widget.onThemeToggle,
+                      onThemeChanged: widget.onThemeChanged,
+                      onLocaleChange: widget.onLocaleChange,
+                    ),
+                  ),
                 );
               },
               icon: const Icon(Icons.logout, color: Colors.white),
@@ -532,7 +552,13 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
                 child: ElevatedButton.icon(
                   onPressed: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => SettingsScreen(
+                        onThemeToggle: widget.onThemeToggle,
+                        onThemeChanged: widget.onThemeChanged,
+                        onLocaleChange: widget.onLocaleChange,
+                      ),
+                    ),
                   ),
                   icon: const Icon(Icons.settings, color: Colors.white),
                   label: Text(l10n.settings, style: const TextStyle(color: Colors.white)),

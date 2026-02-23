@@ -6,7 +6,16 @@ import '../core/theme/app_theme.dart';
 import '../widgets/glass_card.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  final VoidCallback? onThemeToggle;
+  final ValueChanged<bool>? onThemeChanged;
+  final ValueChanged<String>? onLocaleChange;
+
+  const SettingsScreen({
+    Key? key,
+    this.onThemeToggle,
+    this.onThemeChanged,
+    this.onLocaleChange,
+  }) : super(key: key);
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -52,6 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
     setState(() {
       _selectedLanguage = prefs.getString('locale') ?? 'en';
       _notificationsEnabled = prefs.getBool('notifications') ?? true;
@@ -67,10 +77,12 @@ class _SettingsScreenState extends State<SettingsScreen>
   Future<void> _changeLanguage(String lang) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('locale', lang);
+    if (!mounted) return;
     setState(() {
       _selectedLanguage = lang;
     });
-    _showRestartDialog();
+    widget.onLocaleChange?.call(lang);
+    _showAppliedDialog('Language updated successfully.');
   }
 
   Future<void> _toggleSetting(String key, bool value) async {
@@ -83,19 +95,19 @@ class _SettingsScreenState extends State<SettingsScreen>
     await prefs.setDouble('text_scale', scale);
   }
 
-  void _showRestartDialog() {
+  void _showAppliedDialog(String message) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Row(
           children: [
-            Icon(Icons.refresh, color: AppTheme.primaryBlue),
+            Icon(Icons.check_circle, color: AppTheme.primaryBlue),
             SizedBox(width: 12),
-            Text('Restart Required'),
+            Text('Settings Updated'),
           ],
         ),
-        content: const Text('Please restart the app to apply language changes.'),
+        content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -485,7 +497,12 @@ class _SettingsScreenState extends State<SettingsScreen>
                 _darkModeEnabled = value;
               });
               _toggleSetting('isDarkMode', value);
-              _showRestartDialog();
+              if (widget.onThemeChanged != null) {
+                widget.onThemeChanged!(value);
+              } else {
+                widget.onThemeToggle?.call();
+              }
+              _showAppliedDialog('Theme preference updated.');
             },
           ),
           _buildSettingTile(

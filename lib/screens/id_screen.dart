@@ -57,6 +57,7 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
 
     _cardController.forward();
     Future.delayed(const Duration(milliseconds: 500), () {
+      if (!mounted) return;
       _qrController.forward();
     });
   }
