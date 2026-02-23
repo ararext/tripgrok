@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../generated/app_localizations.dart';
 import '../models/tourist_data.dart';
 import '../core/theme/app_theme.dart';
+import '../core/storage/tourist_secure_storage.dart';
 import '../widgets/safety_score_card.dart';
 import '../widgets/emergency_button.dart' as eb;
 import '../widgets/glass_card.dart' as gc;
@@ -83,16 +84,9 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
   }
 
   Future<void> _loadData() async {
-    final prefs = await SharedPreferences.getInstance();
+    final secureData = await TouristSecureStorage.loadTouristData();
     setState(() {
-      _data = TouristData(
-        id: prefs.getString('tourist_id') ?? '',
-        name: prefs.getString('tourist_name') ?? '',
-        passport: prefs.getString('tourist_passport') ?? '',
-        itinerary: prefs.getStringList('itinerary') ?? [],
-        emergencyContacts: prefs.getStringList('emergency_contacts') ?? [],
-        expiry: DateTime.parse(prefs.getString('expiry') ?? DateTime.now().toIso8601String()),
-      );
+      _data = secureData;
       _itinerary = _data!.itinerary;
     });
   }
@@ -102,8 +96,7 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
       setState(() {
         _itinerary.add(_itineraryController.text);
       });
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setStringList('itinerary', _itinerary);
+      await TouristSecureStorage.saveItinerary(_itinerary);
       _itineraryController.clear();
       _showSnackBar('Itinerary item added successfully!', Colors.green);
     }
@@ -343,6 +336,8 @@ class _EnhancedDashboardScreenState extends State<EnhancedDashboardScreen>
               onPressed: () async {
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.clear();
+                await TouristSecureStorage.clearTouristData();
+                if (!mounted) return;
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const LoginScreen()),

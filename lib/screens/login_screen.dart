@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../generated/app_localizations.dart';
 import '../models/tourist_data.dart';
 import '../core/theme/app_theme.dart';
+import '../core/storage/tourist_secure_storage.dart';
 import '../widgets/glass_card.dart';
 import 'enhanced_dashboard_screen.dart';
 
@@ -91,7 +92,6 @@ class _LoginScreenState extends State<LoginScreen>
     // Simulate API call
     await Future.delayed(const Duration(seconds: 2));
 
-    final prefs = await SharedPreferences.getInstance();
     final mockData = TouristData(
       id: 'BLOCKCHAIN_ID_${DateTime.now().millisecondsSinceEpoch}',
       name: _nameController.text,
@@ -101,12 +101,7 @@ class _LoginScreenState extends State<LoginScreen>
       expiry: DateTime.now().add(const Duration(days: 7)),
     );
 
-    await prefs.setString('tourist_name', mockData.name);
-    await prefs.setString('tourist_passport', mockData.passport);
-    await prefs.setString('tourist_id', mockData.id);
-    await prefs.setStringList('itinerary', mockData.itinerary);
-    await prefs.setStringList('emergency_contacts', mockData.emergencyContacts);
-    await prefs.setString('expiry', mockData.expiry.toIso8601String());
+    await TouristSecureStorage.saveTouristData(mockData);
 
     setState(() {
       _isLoading = false;

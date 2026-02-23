@@ -30,3 +30,5 @@ flutter test
 
 - Fixed widget test compilation by updating `MyApp` initialization to use required named parameters (`locale`, `isDarkMode`).
 - Fixed potential runtime crash in the ID screen by safely formatting short/empty tourist IDs before preview rendering.
+- Migrated tourist identity data storage from `SharedPreferences` to `flutter_secure_storage` for sensitive fields.
+- Added iOS camera permission usage description for QR scan support (`NSCameraUsageDescription`).

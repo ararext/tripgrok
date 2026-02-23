@@ -1,10 +1,10 @@
 // lib/screens/enhanced_id_screen.dart
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile_scanner/mobile_scanner.dart'; // New import
 import '../generated/app_localizations.dart';
 import '../models/tourist_data.dart';
 import '../core/theme/app_theme.dart';
+import '../core/storage/tourist_secure_storage.dart';
 import '../widgets/glass_card.dart';
 import 'dart:math' as math;
 
@@ -117,16 +117,13 @@ class _IdScreenState extends State<IdScreen> with TickerProviderStateMixin {
   }
 
   Future<void> _loadData() async {
-    final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _data = TouristData(
-        id: prefs.getString('tourist_id') ?? '',
-        name: prefs.getString('tourist_name') ?? '',
-        passport: prefs.getString('tourist_passport') ?? '',
-        itinerary: prefs.getStringList('itinerary') ?? [],
-        emergencyContacts: prefs.getStringList('emergency_contacts') ?? [],
-        expiry: DateTime.parse(prefs.getString('expiry') ?? DateTime.now().toIso8601String()),
-      );
+      _data = null;
+    });
+    final secureData = await TouristSecureStorage.loadTouristData();
+    if (!mounted) return;
+    setState(() {
+      _data = secureData;
     });
   }
 
